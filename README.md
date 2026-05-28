@@ -1,5 +1,4 @@
 # ChibiDeploy
---- 
 
 Chibi deploy is a simple command line utility which allows you to build, push and deploy images to your servers, largely aimed at web applications.
 
