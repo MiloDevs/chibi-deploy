@@ -1,0 +1,5 @@
+go.sum
+.secrets
+*.log
+*.yml
+!deploy.example.yml

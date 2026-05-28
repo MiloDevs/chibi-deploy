@@ -1,0 +1,18 @@
+servers:
+  prod:
+    host: server-host
+    port: server-port default 22
+    user: server-user default root (recommended for sudo commands)
+    ssh_key: ~/path-to-ssh-key
+services:
+  api:
+    image: ghcr.io/repo-owner/image:tag // use only image:tag for docker hub otherwise ghcr.io/repo-owner/image:tag for github registry
+    src_dir: ./source-path-with-dockerfile
+    registry: ghcr
+    dependencies:
+      db:
+        image: mysql:latest
+        publish_ports: true
+        volumes: true
+deploy_script: |
+  // stuff to do on your server
