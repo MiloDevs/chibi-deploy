@@ -1,4 +1,4 @@
-module chibi-deploy
+module github.com/MiloDevs/chibi-deploy
 
 go 1.26.2
 

@@ -2,7 +2,7 @@ servers:
   prod:
     host: server-host
     port: server-port default 22
-    user: server-user default root (recommended for sudo commands)
+    user: server-user default root
     ssh_key: ~/path-to-ssh-key
 services:
   api:
