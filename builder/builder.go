@@ -39,8 +39,9 @@ func Build(deployConfig config.DeployConfig, secrets map[string]string) {
 			}
 		}
 	}
+}
 
-	// deploy
+func Deploy(deployConfig config.DeployConfig, secrets map[string]string) {
 	if len(deployConfig.DeployScript) != 0 {
 		// if deploy script, run builds and simply ssh into server and execute script
 		for serverName, serverConfig := range deployConfig.Servers {

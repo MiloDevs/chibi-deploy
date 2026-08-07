@@ -28,3 +28,10 @@ func ParseDockerignore(root string) ([]string, error) {
 	}
 	return excludes, nil
 }
+
+// parse for template literals in input string
+func ExpandTemplate(source string, environment map[string]string) string {
+	return os.Expand(source, func(key string) string {
+		return environment[key]
+	})
+}

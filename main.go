@@ -15,5 +15,7 @@ func main() {
 		config.InitConfigFile()
 	case config.Build:
 		builder.Build(deployConfig, secrets)
+	case config.Deploy:
+		builder.Deploy(deployConfig, secrets)
 	}
 }

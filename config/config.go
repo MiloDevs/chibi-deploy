@@ -80,13 +80,9 @@ func ValidateConfig(deployConfig DeployConfig) bool {
 	return true
 }
 
-func fileToConfig[V any](filepath string) (V, error) {
+func fileToConfig[V any](configBytes []byte) (V, error) {
 	var deployConfig V
-	yamlBytes, err := os.ReadFile(filepath)
-	if err != nil {
-		return deployConfig, err
-	}
-	err = yaml.Unmarshal(yamlBytes, &deployConfig)
+	err := yaml.Unmarshal(configBytes, &deployConfig)
 	if err != nil {
 		return deployConfig, err
 	}
@@ -98,6 +94,7 @@ type Action int
 const (
 	Init Action = iota
 	Build
+	Deploy
 )
 
 // parse configuration from cmd_line and config files and return structured output
@@ -114,13 +111,18 @@ func Parse() (DeployConfig, map[string]string, Action) {
 	cmdSet.Parse(os.Args[1:])
 	initSet.Parse(os.Args[1:])
 
-	deployConfig, err := fileToConfig[DeployConfig](*deployFile)
-	if err != nil {
-		log.Fatal("failed to read deploy config", err)
-	}
 	secrets, err := godotenv.Read(*secretsFile)
 	if err != nil {
 		fmt.Println("Warning secrets failed to load, deploy may not work as expected", err)
+	}
+	configBytes, err := os.ReadFile(*deployFile)
+	if err != nil {
+		log.Fatal("FATAL ERROR: Failed to read config file", err)
+	}
+	configExpanded := ExpandTemplate(string(configBytes), secrets)
+	deployConfig, err := fileToConfig[DeployConfig]([]byte(configExpanded))
+	if err != nil {
+		log.Fatal("Failed to read deploy config", err)
 	}
 
 	var action Action
@@ -130,6 +132,8 @@ func Parse() (DeployConfig, map[string]string, Action) {
 		action = Init
 	case "build":
 		action = Build
+	case "deploy":
+		action = Deploy
 	default:
 		log.Fatalf("please provide a valid parameter, use --help to see available commands")
 	}
